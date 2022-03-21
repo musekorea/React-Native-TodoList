@@ -1,13 +1,29 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+//import { StatusBar } from "expo-status-bar";
+import {
+	StyleSheet,
+	Text,
+	View,
+	TouchableOpacity,
+	TouchableHighlight,
+} from "react-native";
 import { app_color } from "./theme.js";
 
 export default function App() {
 	return (
 		<View style={styles.container}>
 			<View style={styles.header}>
-				<Text style={styles.header_title}>To Do</Text>
-				<Text style={styles.header_title}>To Buy</Text>
+				<TouchableHighlight
+					onPress={() => {
+						console.log("clicked");
+					}}
+					underlayColor="red"
+					activeOpacity={0.5}
+				>
+					<Text style={styles.header_title}>To Do</Text>
+				</TouchableHighlight>
+				<TouchableOpacity style={styles.header_title}>
+					<Text style={styles.header_title}>To Buy</Text>
+				</TouchableOpacity>
 			</View>
 		</View>
 	);
@@ -28,6 +44,6 @@ const styles = StyleSheet.create({
 	header_title: {
 		fontSize: "40px",
 		fontWeight: 600,
-		color: app_color.deactivate,
+		color: app_color.fontDefaultColor,
 	},
 });
