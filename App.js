@@ -1,4 +1,5 @@
 //import { StatusBar } from "expo-status-bar";
+import { useState } from "react";
 import {
 	StyleSheet,
 	Text,
@@ -9,20 +10,49 @@ import {
 import { app_color } from "./theme.js";
 
 export default function App() {
+	const [headerTitle, setHeaderTitle] = useState("todo");
+	const headerTodo = (e) => {
+		setHeaderTitle("todo");
+	};
+	const headerTobuy = (e) => {
+		setHeaderTitle("tobuy");
+	};
 	return (
 		<View style={styles.container}>
 			<View style={styles.header}>
 				<TouchableHighlight
-					onPress={() => {
-						console.log("clicked");
-					}}
+					onPress={headerTodo}
 					underlayColor="red"
 					activeOpacity={0.5}
 				>
-					<Text style={styles.header_title}>To Do</Text>
+					<Text
+						style={[
+							styles.header_title,
+							{
+								color:
+									headerTitle === "todo"
+										? app_color.fontDefaultColor
+										: app_color.deactivate,
+							},
+						]}
+					>
+						To Do
+					</Text>
 				</TouchableHighlight>
-				<TouchableOpacity style={styles.header_title}>
-					<Text style={styles.header_title}>To Buy</Text>
+				<TouchableOpacity onPress={headerTobuy}>
+					<Text
+						style={[
+							styles.header_title,
+							{
+								color:
+									headerTitle === "tobuy"
+										? app_color.fontDefaultColor
+										: app_color.deactivate,
+							},
+						]}
+					>
+						To Buy
+					</Text>
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -44,6 +74,6 @@ const styles = StyleSheet.create({
 	header_title: {
 		fontSize: "40px",
 		fontWeight: 600,
-		color: app_color.fontDefaultColor,
+		color: "red",
 	},
 });
