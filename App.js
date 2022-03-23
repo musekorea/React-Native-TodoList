@@ -6,16 +6,22 @@ import {
 	View,
 	TouchableOpacity,
 	TouchableHighlight,
+	TextInput,
 } from "react-native";
 import { app_color } from "./theme.js";
 
 export default function App() {
 	const [headerTitle, setHeaderTitle] = useState("todo");
+	const [textValue, setTestValue] = useState("");
 	const headerTodo = (e) => {
 		setHeaderTitle("todo");
 	};
 	const headerTobuy = (e) => {
 		setHeaderTitle("tobuy");
+	};
+	const onChangeText = (payload) => {
+		console.log(payload);
+		setTestValue(payload);
 	};
 	return (
 		<View style={styles.container}>
@@ -55,6 +61,12 @@ export default function App() {
 					</Text>
 				</TouchableOpacity>
 			</View>
+			<TextInput
+				style={styles.input}
+				placeholder={headerTitle === "todo" ? "Add a Todo" : "Add a Item"}
+				onChangeText={onChangeText}
+				autoFocus
+			></TextInput>
 		</View>
 	);
 }
@@ -69,11 +81,19 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-around",
 		width: "100%",
-		padding: "10px",
+		padding: 10,
 	},
 	header_title: {
-		fontSize: "40px",
-		fontWeight: 600,
+		fontSize: 40,
+		fontWeight: "600",
 		color: "red",
+	},
+	input: {
+		backgroundColor: "white",
+		width: "80%",
+		padding: 10,
+		borderRadius: 20,
+		marginTop: 10,
+		fontSize: 18,
 	},
 });
