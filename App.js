@@ -1,5 +1,5 @@
 //import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
 	StyleSheet,
 	Text,
@@ -12,7 +12,10 @@ import { app_color } from "./theme.js";
 
 export default function App() {
 	const [headerTitle, setHeaderTitle] = useState("todo");
-	const [textValue, setTestValue] = useState("");
+	const [textValue, setTextValue] = useState("");
+	const [todos, setTodos] = useState({});
+	const inputRef = useRef();
+
 	const headerTodo = (e) => {
 		setHeaderTitle("todo");
 	};
@@ -20,8 +23,19 @@ export default function App() {
 		setHeaderTitle("tobuy");
 	};
 	const onChangeText = (payload) => {
-		console.log(payload);
-		setTestValue(payload);
+		setTextValue(payload);
+	};
+	const addTodo = (e) => {
+		if (textValue === "") {
+			return;
+		}
+		const newTodos = Object.assign({}, todos, {
+			[Date.now()]: { text: textValue, part: headerTitle },
+		});
+		setTodos(newTodos);
+		inputRef.current.clear();
+		setTextValue("");
+		console.log(todos);
 	};
 	return (
 		<View style={styles.container}>
@@ -65,7 +79,8 @@ export default function App() {
 				style={styles.input}
 				placeholder={headerTitle === "todo" ? "Add a Todo" : "Add a Item"}
 				onChangeText={onChangeText}
-				autoFocus
+				onSubmitEditing={addTodo}
+				ref={inputRef}
 			></TextInput>
 		</View>
 	);
