@@ -1,5 +1,5 @@
 //import { StatusBar } from "expo-status-bar";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
 	StyleSheet,
 	Text,
@@ -7,6 +7,7 @@ import {
 	TouchableOpacity,
 	TouchableHighlight,
 	TextInput,
+	ScrollView,
 } from "react-native";
 import { app_color } from "./theme.js";
 
@@ -35,7 +36,6 @@ export default function App() {
 		setTodos(newTodos);
 		inputRef.current.clear();
 		setTextValue("");
-		console.log(todos);
 	};
 	return (
 		<View style={styles.container}>
@@ -82,6 +82,13 @@ export default function App() {
 				onSubmitEditing={addTodo}
 				ref={inputRef}
 			></TextInput>
+			<ScrollView style={styles.todoWrapper}>
+				{Object.keys(todos).map((key) => (
+					<View key={key} style={styles.todoBox}>
+						<Text style={styles.todoText}> {todos[key].text}</Text>
+					</View>
+				))}
+			</ScrollView>
 		</View>
 	);
 }
@@ -109,6 +116,19 @@ const styles = StyleSheet.create({
 		padding: 10,
 		borderRadius: 20,
 		marginTop: 10,
+		fontSize: 18,
+	},
+	todoWrapper: { width: "100%" },
+	todoBox: {
+		width: "80%",
+		backgroundColor: "gray",
+		marginTop: 20,
+		padding: 10,
+		borderRadius: 20,
+		marginLeft: "10%",
+	},
+	todoText: {
+		color: "white",
 		fontSize: 18,
 	},
 });
