@@ -10,12 +10,36 @@ import {
 	ScrollView,
 } from "react-native";
 import { app_color } from "./theme.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function App() {
 	const [headerTitle, setHeaderTitle] = useState("todo");
 	const [textValue, setTextValue] = useState("");
 	const [todos, setTodos] = useState({});
 	const inputRef = useRef();
+
+	const saveTodos = async (newTodos) => {
+		try {
+			const jsonTodos = JSON.stringify(newTodos);
+			await AsyncStorage.setItem("@todos", jsonTodos);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const loadTodos = async () => {
+		try {
+			const storageDatas = await AsyncStorage.getItem("@todos");
+			const jsonTodos = JSON.parse(storageDatas);
+			setTodos(jsonTodos);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	useEffect(() => {
+		loadTodos();
+	}, []);
 
 	const headerTodo = (e) => {
 		setHeaderTitle("todo");
@@ -26,7 +50,7 @@ export default function App() {
 	const onChangeText = (payload) => {
 		setTextValue(payload);
 	};
-	const addTodo = (e) => {
+	const addTodo = async (e) => {
 		if (textValue === "") {
 			return;
 		}
@@ -35,6 +59,7 @@ export default function App() {
 		});
 		setTodos(newTodos);
 		inputRef.current.clear();
+		await saveTodos(newTodos);
 		setTextValue("");
 	};
 	return (
