@@ -83,11 +83,13 @@ export default function App() {
 				ref={inputRef}
 			></TextInput>
 			<ScrollView style={styles.todoWrapper}>
-				{Object.keys(todos).map((key) => (
-					<View key={key} style={styles.todoBox}>
-						<Text style={styles.todoText}> {todos[key].text}</Text>
-					</View>
-				))}
+				{Object.keys(todos).map((key) =>
+					todos[key].part === headerTitle ? (
+						<View key={key} style={styles.todoBox}>
+							<Text style={styles.todoText}> {todos[key].text}</Text>
+						</View>
+					) : null
+				)}
 			</ScrollView>
 		</View>
 	);
