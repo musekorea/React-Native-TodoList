@@ -8,6 +8,7 @@ import {
 	TouchableHighlight,
 	TextInput,
 	ScrollView,
+	Alert,
 } from "react-native";
 import { app_color } from "./theme.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -63,11 +64,24 @@ export default function App() {
 		await saveTodos(newTodos);
 		setTextValue("");
 	};
-	const deleteTodo = async (key) => {
-		const copiedTodos = { ...todos };
-		delete copiedTodos[key];
-		setTodos(copiedTodos);
-		await saveTodos(copiedTodos);
+	const deleteTodo = (key) => {
+		Alert.alert("Delete Todo!!", "Are you sure?", [
+			{
+				text: "Cancel",
+				onPress: () => {
+					return;
+				},
+			},
+			{
+				text: "Delete",
+				onPress: async () => {
+					const copiedTodos = { ...todos };
+					delete copiedTodos[key];
+					setTodos(copiedTodos);
+					await saveTodos(copiedTodos);
+				},
+			},
+		]);
 	};
 	return (
 		<View style={styles.container}>
