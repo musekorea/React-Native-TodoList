@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { app_color } from "./theme.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 export default function App() {
 	const [headerTitle, setHeaderTitle] = useState("todo");
@@ -62,6 +63,12 @@ export default function App() {
 		await saveTodos(newTodos);
 		setTextValue("");
 	};
+	const deleteTodo = async (key) => {
+		const copiedTodos = { ...todos };
+		delete copiedTodos[key];
+		setTodos(copiedTodos);
+		await saveTodos(copiedTodos);
+	};
 	return (
 		<View style={styles.container}>
 			<View style={styles.header}>
@@ -112,6 +119,14 @@ export default function App() {
 					todos[key].part === headerTitle ? (
 						<View key={key} style={styles.todoBox}>
 							<Text style={styles.todoText}> {todos[key].text}</Text>
+							<TouchableOpacity onPress={() => deleteTodo(key)}>
+								<FontAwesome5
+									style={styles.trash}
+									name="trash-alt"
+									size={24}
+									color="black"
+								/>
+							</TouchableOpacity>
 						</View>
 					) : null
 				)}
@@ -153,9 +168,13 @@ const styles = StyleSheet.create({
 		padding: 10,
 		borderRadius: 20,
 		marginLeft: "10%",
+		flexDirection: "row",
+		justifyContent: "space-between",
+		paddingHorizontal: 15,
 	},
 	todoText: {
 		color: "white",
 		fontSize: 18,
 	},
+	trash: {},
 });
