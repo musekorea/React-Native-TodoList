@@ -10,9 +10,9 @@ import {
 	ScrollView,
 	Alert,
 } from "react-native";
-import { app_color } from "./theme.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { app_color, styles } from "./theme.js";
 
 export default function App() {
 	const [headerTitle, setHeaderTitle] = useState("todo");
@@ -76,12 +76,12 @@ export default function App() {
 	const onChangeText = (payload) => {
 		setTextValue(payload);
 	};
-	const addTodo = async (e) => {
+	const addTodo = async () => {
 		if (textValue === "") {
 			return;
 		}
 		const newTodos = Object.assign({}, todos, {
-			[Date.now()]: { text: textValue, part: headerTitle },
+			[Date.now()]: { text: textValue, part: headerTitle, done: false },
 		});
 		setTodos(newTodos);
 		inputRef.current.clear();
@@ -107,6 +107,21 @@ export default function App() {
 			},
 		]);
 	};
+	const doneTodo = (id) => {
+		const copiedTodos = { ...todos };
+		Object.keys(copiedTodos).map(async (key) => {
+			try {
+				if (key === id) {
+					copiedTodos[id].done = !copiedTodos[id].done;
+					setTodos(copiedTodos);
+					await saveTodos(copiedTodos);
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		});
+	};
+
 	return (
 		<View style={styles.container}>
 			<View style={styles.header}>
@@ -156,15 +171,35 @@ export default function App() {
 				{Object.keys(todos).map((key) =>
 					todos[key].part === headerTitle ? (
 						<View key={key} style={styles.todoBox}>
-							<Text style={styles.todoText}> {todos[key].text}</Text>
-							<TouchableOpacity onPress={() => deleteTodo(key)}>
-								<FontAwesome5
-									style={styles.trash}
-									name="trash-alt"
-									size={24}
-									color="black"
-								/>
-							</TouchableOpacity>
+							<Text
+								style={[
+									styles.todoText,
+									{
+										textDecorationLine:
+											todos[key].done === true ? "line-through" : "none",
+									},
+								]}
+							>
+								{todos[key].text}
+							</Text>
+							<View style={styles.buttonsBox}>
+								<TouchableOpacity onPress={() => deleteTodo(key)}>
+									<FontAwesome5
+										style={styles.trash}
+										name="trash-alt"
+										size={24}
+										color="black"
+									/>
+								</TouchableOpacity>
+								<TouchableOpacity onPress={() => doneTodo(key)}>
+									<FontAwesome5
+										style={styles.check}
+										name="check"
+										size={24}
+										color="black"
+									/>
+								</TouchableOpacity>
+							</View>
 						</View>
 					) : null
 				)}
@@ -172,47 +207,3 @@ export default function App() {
 		</View>
 	);
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: app_color.background,
-		alignItems: "center",
-	},
-	header: {
-		flexDirection: "row",
-		justifyContent: "space-around",
-		width: "100%",
-		padding: 10,
-	},
-	header_title: {
-		fontSize: 40,
-		fontWeight: "600",
-		color: "red",
-	},
-	input: {
-		backgroundColor: "white",
-		width: "80%",
-		padding: 10,
-		borderRadius: 20,
-		marginTop: 10,
-		fontSize: 18,
-	},
-	todoWrapper: { width: "100%" },
-	todoBox: {
-		width: "80%",
-		backgroundColor: "gray",
-		marginTop: 20,
-		padding: 10,
-		borderRadius: 20,
-		marginLeft: "10%",
-		flexDirection: "row",
-		justifyContent: "space-between",
-		paddingHorizontal: 15,
-	},
-	todoText: {
-		color: "white",
-		fontSize: 18,
-	},
-	trash: {},
-});
