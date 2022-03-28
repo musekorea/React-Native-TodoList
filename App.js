@@ -29,9 +29,26 @@ export default function App() {
 		}
 	};
 
+	const loadHeader = async () => {
+		try {
+			const header = await AsyncStorage.getItem("@header");
+			if (!header) {
+				setHeaderTitle("todo");
+			} else {
+				setHeaderTitle(header);
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	const loadTodos = async () => {
 		try {
 			const storageDatas = await AsyncStorage.getItem("@todos");
+			if (!storageDatas) {
+				setTodos({});
+				return;
+			}
 			const jsonTodos = JSON.parse(storageDatas);
 			setTodos(jsonTodos);
 		} catch (error) {
@@ -41,14 +58,21 @@ export default function App() {
 
 	useEffect(() => {
 		loadTodos();
+		loadHeader();
 	}, []);
 
 	const headerTodo = (e) => {
 		setHeaderTitle("todo");
+		saveHeader("todo");
 	};
 	const headerTobuy = (e) => {
 		setHeaderTitle("tobuy");
+		saveHeader("tobuy");
 	};
+	const saveHeader = async (header) => {
+		await AsyncStorage.setItem("@header", header);
+	};
+
 	const onChangeText = (payload) => {
 		setTextValue(payload);
 	};
