@@ -32,17 +32,7 @@ export const styles = StyleSheet.create({
 		fontSize: 18,
 	},
 	todoWrapper: { width: "100%" },
-	todoBox: {
-		width: "80%",
-		backgroundColor: "gray",
-		marginTop: 20,
-		padding: 10,
-		borderRadius: 20,
-		marginLeft: "10%",
-		flexDirection: "row",
-		justifyContent: "space-between",
-		paddingHorizontal: 15,
-	},
+	todoBox: {},
 	todoText: {
 		color: "white",
 		fontSize: 18,
@@ -53,6 +43,36 @@ export const styles = StyleSheet.create({
 	},
 	check: {
 		marginHorizontal: 10,
+	},
+	todoNoEdit: {
+		width: "80%",
+		backgroundColor: "gray",
+		marginTop: 20,
+		padding: 10,
+		borderRadius: 20,
+		marginLeft: "10%",
+		flexDirection: "row",
+		justifyContent: "space-between",
+		paddingHorizontal: 15,
+	},
+	todoEdit: {
+		width: "80%",
+		backgroundColor: "white",
+		marginTop: 20,
+		padding: 10,
+		borderRadius: 20,
+		marginLeft: "10%",
+		flexDirection: "row",
+		justifyContent: "space-between",
+		paddingHorizontal: 15,
+	},
+	editInput: {
+		width: "80%",
+	},
+	editButtons: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		width: "20%",
 	},
 });
 export default styles;

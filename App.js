@@ -11,7 +11,7 @@ import {
 	Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import { app_color, styles } from "./theme.js";
 
 export default function App() {
@@ -121,6 +121,29 @@ export default function App() {
 			}
 		});
 	};
+	const [editID, setEditID] = useState(null);
+	const editTodo = (id) => {
+		setEditID(id);
+	};
+	const cancelEdit = () => {
+		setEditID(null);
+	};
+	const confirmEdit = () => {
+		const copiedTodos = { ...todos };
+		Object.keys(todos).map(async (key) => {
+			try {
+				if (editID === key) {
+					copiedTodos[key].text = textValue;
+					setTodos(copiedTodos);
+					await saveTodos(copiedTodos);
+					setTextValue("");
+					setEditID(null);
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		});
+	};
 
 	return (
 		<View style={styles.container}>
@@ -167,39 +190,69 @@ export default function App() {
 				onSubmitEditing={addTodo}
 				ref={inputRef}
 			></TextInput>
+
 			<ScrollView style={styles.todoWrapper}>
 				{Object.keys(todos).map((key) =>
 					todos[key].part === headerTitle ? (
 						<View key={key} style={styles.todoBox}>
-							<Text
-								style={[
-									styles.todoText,
-									{
-										textDecorationLine:
-											todos[key].done === true ? "line-through" : "none",
-									},
-								]}
-							>
-								{todos[key].text}
-							</Text>
-							<View style={styles.buttonsBox}>
-								<TouchableOpacity onPress={() => deleteTodo(key)}>
-									<FontAwesome5
-										style={styles.trash}
-										name="trash-alt"
-										size={24}
-										color="black"
-									/>
-								</TouchableOpacity>
-								<TouchableOpacity onPress={() => doneTodo(key)}>
-									<FontAwesome5
-										style={styles.check}
-										name="check"
-										size={24}
-										color="black"
-									/>
-								</TouchableOpacity>
-							</View>
+							{editID !== key ? (
+								<View style={styles.todoNoEdit}>
+									<Text
+										style={[
+											styles.todoText,
+											{
+												textDecorationLine:
+													todos[key].done === true ? "line-through" : "none",
+											},
+										]}
+									>
+										{todos[key].text}
+									</Text>
+									<View style={styles.buttonsBox}>
+										<TouchableOpacity
+											onPress={() => {
+												editTodo(key);
+												setTextValue(todos[key].text);
+											}}
+										>
+											<FontAwesome5 name="edit" size={24} color="black" />
+										</TouchableOpacity>
+										<TouchableOpacity onPress={() => doneTodo(key)}>
+											<FontAwesome5
+												style={styles.check}
+												name="check"
+												size={24}
+												color="black"
+											/>
+										</TouchableOpacity>
+										<TouchableOpacity onPress={() => deleteTodo(key)}>
+											<FontAwesome5
+												style={styles.trash}
+												name="trash-alt"
+												size={24}
+												color="black"
+											/>
+										</TouchableOpacity>
+									</View>
+								</View>
+							) : (
+								<View style={styles.todoEdit}>
+									<TextInput
+										value={textValue}
+										style={styles.editInput}
+										onChangeText={onChangeText}
+										onSubmitEditing={confirmEdit}
+									></TextInput>
+									<View style={styles.editButtons}>
+										<TouchableOpacity onPress={cancelEdit}>
+											<MaterialIcons name="cancel" size={24} color="black" />
+										</TouchableOpacity>
+										<TouchableOpacity onPress={confirmEdit}>
+											<MaterialIcons name="done" size={24} color="black" />
+										</TouchableOpacity>
+									</View>
+								</View>
+							)}
 						</View>
 					) : null
 				)}
