@@ -11,6 +11,7 @@ export const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: app_color.background,
 		alignItems: "center",
+		marginTop: 25,
 	},
 	header: {
 		flexDirection: "row",

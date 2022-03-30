@@ -23,10 +23,13 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.m3muse.Todo_List_App"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "Codeme Todo List App",
+    "githubUrl": "https://github.com/musekorea/React-Native-TodoList"
   }
 }

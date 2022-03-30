@@ -1,4 +1,4 @@
-//import { StatusBar } from "expo-status-bar";
+import { StatusBar } from "expo-status-bar";
 import { useState, useRef, useEffect } from "react";
 import {
 	StyleSheet,
@@ -158,6 +158,7 @@ export default function App() {
 
 	return (
 		<View style={styles.container}>
+			<StatusBar style="auto"></StatusBar>
 			<View style={styles.header}>
 				<TouchableHighlight
 					onPress={headerTodo}
