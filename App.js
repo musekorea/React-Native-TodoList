@@ -9,6 +9,7 @@ import {
 	TextInput,
 	ScrollView,
 	Alert,
+	Platform,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
@@ -88,24 +89,34 @@ export default function App() {
 		await saveTodos(newTodos);
 		setTextValue("");
 	};
-	const deleteTodo = (key) => {
-		Alert.alert("Delete Todo!!", "Are you sure?", [
-			{
-				text: "Cancel",
-				onPress: () => {
-					return;
+	const deleteTodo = async (key) => {
+		if (Platform.OS === "web") {
+			const ok = confirm("Are you sure to delete?");
+			if (ok) {
+				const copiedTodos = { ...todos };
+				delete copiedTodos[key];
+				setTodos(copiedTodos);
+				await saveTodos(copiedTodos);
+			}
+		} else {
+			Alert.alert("Delete Todo!!", "Are you sure?", [
+				{
+					text: "Cancel",
+					onPress: () => {
+						return;
+					},
 				},
-			},
-			{
-				text: "Delete",
-				onPress: async () => {
-					const copiedTodos = { ...todos };
-					delete copiedTodos[key];
-					setTodos(copiedTodos);
-					await saveTodos(copiedTodos);
+				{
+					text: "Delete",
+					onPress: async () => {
+						const copiedTodos = { ...todos };
+						delete copiedTodos[key];
+						setTodos(copiedTodos);
+						await saveTodos(copiedTodos);
+					},
 				},
-			},
-		]);
+			]);
+		}
 	};
 	const doneTodo = (id) => {
 		const copiedTodos = { ...todos };
